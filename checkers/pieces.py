@@ -1,5 +1,13 @@
+# pylint: disable=import-error
+
 import pygame
-from .constants import RED, GREY, WHITE, SQUARE_SIZE  # pylint: disable=import-error
+from .constants import (
+    RED,
+    GREY,
+    WHITE,
+    SQUARE_SIZE,
+    CROWN,
+)  #
 
 
 class Piece:
@@ -11,10 +19,6 @@ class Piece:
         self.col = col
         self.color = color
         self.king = False
-        if self.color == RED:
-            self.direction = -1
-        else:
-            self.direction = 1
 
         self.x = 0
         self.y = 0
@@ -30,13 +34,18 @@ class Piece:
 
     def draw(self, win):
         radius = SQUARE_SIZE // 2 - self.PADDING
-        pygame.draw.circle(
-            win,
-            GREY,
-            (self.x, self.y),
-            radius + self.OUTLINE,
-        )
+        pygame.draw.circle(win, GREY, (self.x, self.y), radius + self.OUTLINE)
         pygame.draw.circle(win, self.color, (self.x, self.y), radius)
+        if self.king:
+            win.blit(
+                CROWN,
+                (self.x - CROWN.get_width() // 2, self.y - CROWN.get_height() // 2),
+            )
+
+    def move(self, row, col):
+        self.row = row
+        self.col = col
+        self.calc_pos()
 
     def __repr__(self):
         return str(self.color)
